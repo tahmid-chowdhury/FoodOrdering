@@ -61,4 +61,23 @@ class DatabaseHelper {
     Database db = await database;
     return await db.query(orderTable, where: 'date = ?', whereArgs: [date]);
   }
+
+  Future<void> deleteOrder(int id) async {
+    final db = await _database;
+    await db!.delete(
+      'orders',
+      where: 'id = ?',
+      whereArgs: [id],
+    );
+  }
+
+  Future<void> updateOrder(int id, String updatedItems) async {
+    final db = await database;
+    await db.update(
+      'orders',
+      {'items': updatedItems},
+      where: 'id = ?',
+      whereArgs: [id],
+    );
+  }
 }

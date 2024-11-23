@@ -12,7 +12,6 @@ class _OrderQueryScreenState extends State<OrderQueryScreen> {
   final DatabaseHelper dbHelper = DatabaseHelper.instance;
   DateTime? _selectedDate;
   Map<String, dynamic>? orderPlan;
-  final TextEditingController _itemsController = TextEditingController();
 
   void _pickDate() async {
     final DateTime? pickedDate = await showDatePicker(
@@ -36,47 +35,51 @@ class _OrderQueryScreenState extends State<OrderQueryScreen> {
     final result = await dbHelper.fetchOrderByDate(dateString);
 
     setState(() {
-      if (result.isNotEmpty) {
-        orderPlan = result.first;
-        _itemsController.text = orderPlan!['items'];
-      } else {
-        orderPlan = null;
-      }
+      orderPlan = result.isNotEmpty ? result.first : null;
     });
   }
 
   void _updateOrderPlan() async {
-    if (orderPlan != null) {
-      final updatedItems = _itemsController.text;
-      final db = await dbHelper.database;
-      await db.update(
-        DatabaseHelper.orderTable,
-        {'items': updatedItems},
-        where: 'id = ?',
-        whereArgs: [orderPlan!['id']],
-      );
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Order plan updated successfully')),
-      );
-      _fetchOrderPlan();
-    }
+    if (orderPlan == null) return;
+
+    final itemsController = TextEditingController(text: orderPlan!['items']);
+
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Update Order Plan'),
+        content: TextField(
+          controller: itemsController,
+          decoration: const InputDecoration(labelText: 'Items'),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Cancel'),
+          ),
+          ElevatedButton(
+            onPressed: () async {
+              final updatedItems = itemsController.text;
+              if (updatedItems.isNotEmpty) {
+                await dbHelper.updateOrder(orderPlan!['id'], updatedItems);
+                Navigator.pop(context);
+                _fetchOrderPlan();
+              }
+            },
+            child: const Text('Update'),
+          ),
+        ],
+      ),
+    );
   }
 
   void _deleteOrderPlan() async {
-    if (orderPlan != null) {
-      final db = await dbHelper.database;
-      await db.delete(
-        DatabaseHelper.orderTable,
-        where: 'id = ?',
-        whereArgs: [orderPlan!['id']],
-      );
-      setState(() {
-        orderPlan = null;
-      });
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Order plan deleted successfully')),
-      );
-    }
+    if (orderPlan == null) return;
+
+    await dbHelper.deleteOrder(orderPlan!['id']);
+    setState(() {
+      orderPlan = null;
+    });
   }
 
   @override
@@ -85,43 +88,35 @@ class _OrderQueryScreenState extends State<OrderQueryScreen> {
       body: Column(
         children: [
           // Date Picker
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Row(
-              children: [
-                Text(
-                  _selectedDate != null
-                      ? 'Selected Date: ${_selectedDate!.toLocal().toString().split(' ')[0]}'
-                      : 'No Date Selected',
-                ),
-                const SizedBox(width: 10),
-                ElevatedButton(
-                  onPressed: _pickDate,
-                  child: const Text('Pick Date'),
-                ),
-              ],
-            ),
+          Row(
+            children: [
+              Text(
+                _selectedDate != null
+                    ? 'Selected Date: ${_selectedDate!.toLocal().toString().split(' ')[0]}'
+                    : 'No Date Selected',
+              ),
+              ElevatedButton(
+                onPressed: _pickDate,
+                child: const Text('Pick Date'),
+              ),
+            ],
           ),
           const Divider(),
-          // Display Order Plan with Edit/Delete Options
+          // Order Plan Details
           if (orderPlan != null) ...[
-            Text(
-              'Order Plan for ${_selectedDate!.toLocal().toString().split(' ')[0]}',
-              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 10),
-            TextField(
-              controller: _itemsController,
-              decoration: const InputDecoration(labelText: 'Items'),
-            ),
-            ElevatedButton(
-              onPressed: _updateOrderPlan,
-              child: const Text('Update Order Plan'),
-            ),
-            ElevatedButton(
-              onPressed: _deleteOrderPlan,
-              style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
-              child: const Text('Delete Order Plan'),
+            Text('Items: ${orderPlan!['items']}'),
+            Text('Total Cost: \$${orderPlan!['totalCost']}'),
+            Row(
+              children: [
+                ElevatedButton(
+                  onPressed: _updateOrderPlan,
+                  child: const Text('Update Order Plan'),
+                ),
+                ElevatedButton(
+                  onPressed: _deleteOrderPlan,
+                  child: const Text('Delete Order Plan'),
+                ),
+              ],
             ),
           ] else if (_selectedDate != null) ...[
             const Text('No order plan found for the selected date.'),
