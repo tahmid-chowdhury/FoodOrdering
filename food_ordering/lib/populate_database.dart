@@ -1,11 +1,25 @@
+/* SOFE 4640U: Mobile Application Development
+ * Assignment #3: App Development using Flutter
+ * Tahmid Chowdhury
+ * Faculty of Engineering and Applied Science
+ * Ontario Tech University
+ * Oshawa, Ontario
+ * tahmid.chowdhury1@ontariotechu.net
+ * SID: 100822671
+ * 2024-11-27
+ */
+
 import 'database_helper.dart';
 
+// Populate database class
 class PopulateDatabase {
   final DatabaseHelper dbHelper = DatabaseHelper.instance;
 
+  // Populate the database with food items
   Future<void> populateFoodItems() async {
     final List<Map<String, dynamic>> existingItems = await dbHelper.fetchFoodItems();
     if (existingItems.isNotEmpty) {
+      // Database already has food items
       return;
     }
 

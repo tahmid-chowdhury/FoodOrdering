@@ -1,6 +1,18 @@
+/* SOFE 4640U: Mobile Application Development
+ * Assignment #3: App Development using Flutter
+ * Tahmid Chowdhury
+ * Faculty of Engineering and Applied Science
+ * Ontario Tech University
+ * Oshawa, Ontario
+ * tahmid.chowdhury1@ontariotechu.net
+ * SID: 100822671
+ * 2024-11-27
+ */
+
 import 'package:flutter/material.dart';
 import 'database_helper.dart';
 
+// Order plan screen widget
 class OrderPlanScreen extends StatefulWidget {
   const OrderPlanScreen({Key? key}) : super(key: key);
 
@@ -8,6 +20,7 @@ class OrderPlanScreen extends StatefulWidget {
   State<OrderPlanScreen> createState() => _OrderPlanScreenState();
 }
 
+// Order plan screen state
 class _OrderPlanScreenState extends State<OrderPlanScreen> {
   final DatabaseHelper dbHelper = DatabaseHelper.instance;
   final TextEditingController _targetCostController = TextEditingController();
@@ -18,12 +31,14 @@ class _OrderPlanScreenState extends State<OrderPlanScreen> {
   double currentCost = 0.0;
   double? targetCost;
 
+  // Initialize the state
   @override
   void initState() {
     super.initState();
     _fetchFoodItems();
   }
 
+  // Fetch food items from the database
   void _fetchFoodItems() async {
     final items = await dbHelper.fetchFoodItems();
     setState(() {
@@ -31,6 +46,7 @@ class _OrderPlanScreenState extends State<OrderPlanScreen> {
     });
   }
 
+  // Pick a date for the order plan
   void _pickDate() async {
     final DateTime? pickedDate = await showDatePicker(
       context: context,
@@ -45,6 +61,7 @@ class _OrderPlanScreenState extends State<OrderPlanScreen> {
     }
   }
 
+  // Add an item to the cart
   void _addToCart(Map<String, dynamic> item) {
     if (targetCost == null || _selectedDate == null) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -67,6 +84,7 @@ class _OrderPlanScreenState extends State<OrderPlanScreen> {
     }
   }
 
+  // Remove an item from the cart
   void _removeFromCart(Map<String, dynamic> item) {
     setState(() {
       selectedItems.remove(item);
@@ -74,6 +92,7 @@ class _OrderPlanScreenState extends State<OrderPlanScreen> {
     });
   }
 
+  // Save the order plan
   void _saveOrderPlan() async {
     if (targetCost == null || _selectedDate == null || selectedItems.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -99,11 +118,13 @@ class _OrderPlanScreenState extends State<OrderPlanScreen> {
     });
   }
 
+  // Build the order plan screen
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Column(
         children: [
+          // Set the target cost for the order plan
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: TextField(
@@ -127,6 +148,7 @@ class _OrderPlanScreenState extends State<OrderPlanScreen> {
               },
             ),
           ),
+          // Select a date for the order plan
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: Row(
@@ -148,6 +170,7 @@ class _OrderPlanScreenState extends State<OrderPlanScreen> {
               ],
             ),
           ),
+          // Display the remaining budget
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: Text(
@@ -155,6 +178,7 @@ class _OrderPlanScreenState extends State<OrderPlanScreen> {
               style: Theme.of(context).textTheme.bodyLarge,
             ),
           ),
+          // Display the food items
           Expanded(
             child: ListView.builder(
               itemCount: foodItems.length,
@@ -177,6 +201,7 @@ class _OrderPlanScreenState extends State<OrderPlanScreen> {
               },
             ),
           ),
+          // Display the order preview
           const Divider(),
           const Text(
             'Order Preview:',
@@ -194,6 +219,7 @@ class _OrderPlanScreenState extends State<OrderPlanScreen> {
               },
             ),
           ),
+          // Save the order plan
           ElevatedButton(
             onPressed: _saveOrderPlan,
             child: const Text('Save Order Plan'),

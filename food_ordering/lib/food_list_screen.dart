@@ -1,6 +1,18 @@
+/* SOFE 4640U: Mobile Application Development
+ * Assignment #3: App Development using Flutter
+ * Tahmid Chowdhury
+ * Faculty of Engineering and Applied Science
+ * Ontario Tech University
+ * Oshawa, Ontario
+ * tahmid.chowdhury1@ontariotechu.net
+ * SID: 100822671
+ * 2024-11-27
+ */
+
 import 'package:flutter/material.dart';
 import 'database_helper.dart';
 
+// Food list screen widget
 class FoodListScreen extends StatefulWidget {
   const FoodListScreen({Key? key}) : super(key: key);
 
@@ -8,6 +20,7 @@ class FoodListScreen extends StatefulWidget {
   State<FoodListScreen> createState() => _FoodListScreenState();
 }
 
+// State for the food list screen
 class _FoodListScreenState extends State<FoodListScreen> {
   final DatabaseHelper dbHelper = DatabaseHelper.instance;
 
@@ -15,12 +28,14 @@ class _FoodListScreenState extends State<FoodListScreen> {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _costController = TextEditingController();
 
+  // Initialize the state
   @override
   void initState() {
     super.initState();
     _fetchFoodItems();
   }
 
+  // Fetch food items from the database
   void _fetchFoodItems() async {
     final items = await dbHelper.fetchFoodItems();
     setState(() {
@@ -28,6 +43,7 @@ class _FoodListScreenState extends State<FoodListScreen> {
     });
   }
 
+  // Add or update a food item
   void _addOrUpdateFoodItem({Map<String, dynamic>? item}) async {
     final isUpdate = item != null;
 
@@ -86,6 +102,7 @@ class _FoodListScreenState extends State<FoodListScreen> {
     );
   }
 
+  // Delete a food item
   void _deleteFoodItem(int id) async {
     final db = await dbHelper.database;
     await db.delete(
@@ -96,6 +113,7 @@ class _FoodListScreenState extends State<FoodListScreen> {
     _fetchFoodItems();
   }
 
+  // Build the food list screen
   @override
   Widget build(BuildContext context) {
     return Scaffold(

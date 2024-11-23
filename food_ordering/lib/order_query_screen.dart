@@ -1,6 +1,18 @@
+/* SOFE 4640U: Mobile Application Development
+ * Assignment #3: App Development using Flutter
+ * Tahmid Chowdhury
+ * Faculty of Engineering and Applied Science
+ * Ontario Tech University
+ * Oshawa, Ontario
+ * tahmid.chowdhury1@ontariotechu.net
+ * SID: 100822671
+ * 2024-11-27
+ */
+
 import 'package:flutter/material.dart';
 import 'database_helper.dart';
 
+// Order query screen widget
 class OrderQueryScreen extends StatefulWidget {
   const OrderQueryScreen({Key? key}) : super(key: key);
 
@@ -8,11 +20,13 @@ class OrderQueryScreen extends StatefulWidget {
   State<OrderQueryScreen> createState() => _OrderQueryScreenState();
 }
 
+// Order query screen state
 class _OrderQueryScreenState extends State<OrderQueryScreen> {
   final DatabaseHelper dbHelper = DatabaseHelper.instance;
   DateTime? _selectedDate;
   Map<String, dynamic>? orderPlan;
 
+  // Initialize the state
   void _pickDate() async {
     final DateTime? pickedDate = await showDatePicker(
       context: context,
@@ -28,6 +42,7 @@ class _OrderQueryScreenState extends State<OrderQueryScreen> {
     }
   }
 
+  // Fetch the order plan for the selected date
   void _fetchOrderPlan() async {
     if (_selectedDate == null) return;
 
@@ -39,6 +54,7 @@ class _OrderQueryScreenState extends State<OrderQueryScreen> {
     });
   }
 
+  // Update the order plan
   void _updateOrderPlan() async {
     if (orderPlan == null) return;
 
@@ -73,6 +89,7 @@ class _OrderQueryScreenState extends State<OrderQueryScreen> {
     );
   }
 
+  // Delete the order plan
   void _deleteOrderPlan() async {
     if (orderPlan == null) return;
 
@@ -82,11 +99,13 @@ class _OrderQueryScreenState extends State<OrderQueryScreen> {
     });
   }
 
+  // Build the order query screen
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Column(
         children: [
+          // Display the selected date and a button to pick a date
           Row(
             children: [
               Text(
@@ -106,6 +125,7 @@ class _OrderQueryScreenState extends State<OrderQueryScreen> {
             ],
           ),
           const Divider(),
+          // Display the order plan details
           if (orderPlan != null) ...[
             Text('Items: ${orderPlan!['items']}', style: Theme.of(context).textTheme.bodyLarge),
             Text('Total Cost: \$${orderPlan!['totalCost']}', style: Theme.of(context).textTheme.bodyMedium),
