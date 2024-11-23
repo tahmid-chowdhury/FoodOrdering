@@ -137,11 +137,15 @@ class _OrderPlanScreenState extends State<OrderPlanScreen> {
                   _selectedDate != null
                       ? 'Selected Date: ${_selectedDate!.toLocal().toString().split(' ')[0]}'
                       : 'No Date Selected',
+                  style: Theme.of(context).textTheme.bodyLarge,
                 ),
                 const SizedBox(width: 10),
                 ElevatedButton(
                   onPressed: _pickDate,
                   child: const Text('Pick Date'),
+                  style: ElevatedButton.styleFrom(
+                    textStyle: Theme.of(context).textTheme.bodyLarge,
+                  ),
                 ),
               ],
             ),
@@ -151,7 +155,7 @@ class _OrderPlanScreenState extends State<OrderPlanScreen> {
             padding: const EdgeInsets.all(8.0),
             child: Text(
               'Remaining Budget: \$${targetCost != null ? (targetCost! - currentCost).toStringAsFixed(2) : '0.00'}',
-              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+              style: Theme.of(context).textTheme.bodyLarge,
             ),
           ),
           // Food Items List
@@ -162,8 +166,8 @@ class _OrderPlanScreenState extends State<OrderPlanScreen> {
                 final item = foodItems[index];
                 final isInCart = selectedItems.contains(item);
                 return ListTile(
-                  title: Text(item['name']),
-                  subtitle: Text('Cost: \$${item['cost']}'),
+                  title: Text(item['name'], style: Theme.of(context).textTheme.bodyLarge),
+                  subtitle: Text('Cost: \$${item['cost']}', style: Theme.of(context).textTheme.bodyMedium),
                   trailing: isInCart
                       ? IconButton(
                           icon: const Icon(Icons.remove, color: Colors.red),
@@ -199,6 +203,9 @@ class _OrderPlanScreenState extends State<OrderPlanScreen> {
           ElevatedButton(
             onPressed: _saveOrderPlan,
             child: const Text('Save Order Plan'),
+            style: ElevatedButton.styleFrom(
+              textStyle: Theme.of(context).textTheme.bodyLarge,
+            ),
           ),
         ],
       ),

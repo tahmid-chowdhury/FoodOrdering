@@ -21,7 +21,19 @@ class FoodOrderingApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Food Ordering App',
-      theme: ThemeData(primarySwatch: Colors.blue),
+      theme: ThemeData(
+        brightness: Brightness.dark, // Dark theme
+        primarySwatch: Colors.teal,
+        textTheme: const TextTheme(
+          headlineLarge: TextStyle(fontFamily: 'FiraCode', fontSize: 24, fontWeight: FontWeight.bold),
+          bodyLarge: TextStyle(fontFamily: 'FiraCode', fontSize: 16),
+          bodyMedium: TextStyle(fontFamily: 'FiraCode', fontSize: 14),
+        ),
+        appBarTheme: const AppBarTheme(
+          color: Colors.teal,
+          titleTextStyle: TextStyle(fontFamily: 'FiraCode', fontSize: 20, fontWeight: FontWeight.bold),
+        ),
+      ),
       home: const HomeScreen(),
     );
   }

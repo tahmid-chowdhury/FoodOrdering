@@ -94,27 +94,38 @@ class _OrderQueryScreenState extends State<OrderQueryScreen> {
                 _selectedDate != null
                     ? 'Selected Date: ${_selectedDate!.toLocal().toString().split(' ')[0]}'
                     : 'No Date Selected',
+                style: Theme.of(context).textTheme.bodyLarge,
               ),
+              const SizedBox(width: 10),
               ElevatedButton(
                 onPressed: _pickDate,
                 child: const Text('Pick Date'),
+                style: ElevatedButton.styleFrom(
+                  textStyle: Theme.of(context).textTheme.bodyLarge,
+                ),
               ),
             ],
           ),
           const Divider(),
           // Order Plan Details
           if (orderPlan != null) ...[
-            Text('Items: ${orderPlan!['items']}'),
-            Text('Total Cost: \$${orderPlan!['totalCost']}'),
+            Text('Items: ${orderPlan!['items']}', style: Theme.of(context).textTheme.bodyLarge),
+            Text('Total Cost: \$${orderPlan!['totalCost']}', style: Theme.of(context).textTheme.bodyMedium),
             Row(
               children: [
                 ElevatedButton(
                   onPressed: _updateOrderPlan,
                   child: const Text('Update Order Plan'),
+                  style: ElevatedButton.styleFrom(
+                    textStyle: Theme.of(context).textTheme.bodyLarge,
+                  ),
                 ),
                 ElevatedButton(
                   onPressed: _deleteOrderPlan,
                   child: const Text('Delete Order Plan'),
+                  style: ElevatedButton.styleFrom(
+                    textStyle: Theme.of(context).textTheme.bodyLarge,
+                  ),
                 ),
               ],
             ),

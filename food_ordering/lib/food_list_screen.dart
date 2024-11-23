@@ -104,6 +104,9 @@ class _FoodListScreenState extends State<FoodListScreen> {
           ElevatedButton(
             onPressed: () => _addOrUpdateFoodItem(),
             child: const Text('Add Food Item'),
+            style: ElevatedButton.styleFrom(
+              textStyle: Theme.of(context).textTheme.bodyLarge,
+            ),
           ),
           Expanded(
             child: ListView.builder(
@@ -111,8 +114,8 @@ class _FoodListScreenState extends State<FoodListScreen> {
               itemBuilder: (context, index) {
                 final item = foodItems[index];
                 return ListTile(
-                  title: Text(item['name']),
-                  subtitle: Text('Cost: \$${item['cost']}'),
+                  title: Text(item['name'], style: Theme.of(context).textTheme.bodyLarge),
+                  subtitle: Text('Cost: \$${item['cost']}', style: Theme.of(context).textTheme.bodyMedium),
                   trailing: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
