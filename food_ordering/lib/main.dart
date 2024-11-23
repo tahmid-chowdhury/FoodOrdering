@@ -7,7 +7,6 @@ import 'populate_database.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  // Populate the database
   final PopulateDatabase populator = PopulateDatabase();
   await populator.populateFoodItems();
 
@@ -22,7 +21,7 @@ class FoodOrderingApp extends StatelessWidget {
     return MaterialApp(
       title: 'Food Ordering App',
       theme: ThemeData(
-        brightness: Brightness.dark, // Dark theme
+        brightness: Brightness.dark,
         primarySwatch: Colors.teal,
         textTheme: const TextTheme(
           headlineLarge: TextStyle(fontFamily: 'FiraCode', fontSize: 24, fontWeight: FontWeight.bold),

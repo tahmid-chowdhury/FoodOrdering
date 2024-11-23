@@ -87,7 +87,6 @@ class _OrderQueryScreenState extends State<OrderQueryScreen> {
     return Scaffold(
       body: Column(
         children: [
-          // Date Picker
           Row(
             children: [
               Text(
@@ -107,7 +106,6 @@ class _OrderQueryScreenState extends State<OrderQueryScreen> {
             ],
           ),
           const Divider(),
-          // Order Plan Details
           if (orderPlan != null) ...[
             Text('Items: ${orderPlan!['items']}', style: Theme.of(context).textTheme.bodyLarge),
             Text('Total Cost: \$${orderPlan!['totalCost']}', style: Theme.of(context).textTheme.bodyMedium),

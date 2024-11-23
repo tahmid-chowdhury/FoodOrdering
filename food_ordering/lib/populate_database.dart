@@ -6,7 +6,6 @@ class PopulateDatabase {
   Future<void> populateFoodItems() async {
     final List<Map<String, dynamic>> existingItems = await dbHelper.fetchFoodItems();
     if (existingItems.isNotEmpty) {
-      // Database already populated
       return;
     }
 

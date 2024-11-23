@@ -104,7 +104,6 @@ class _OrderPlanScreenState extends State<OrderPlanScreen> {
     return Scaffold(
       body: Column(
         children: [
-          // Set Target Cost
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: TextField(
@@ -128,7 +127,6 @@ class _OrderPlanScreenState extends State<OrderPlanScreen> {
               },
             ),
           ),
-          // Pick Date
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: Row(
@@ -150,7 +148,6 @@ class _OrderPlanScreenState extends State<OrderPlanScreen> {
               ],
             ),
           ),
-          // Remaining Budget
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: Text(
@@ -158,7 +155,6 @@ class _OrderPlanScreenState extends State<OrderPlanScreen> {
               style: Theme.of(context).textTheme.bodyLarge,
             ),
           ),
-          // Food Items List
           Expanded(
             child: ListView.builder(
               itemCount: foodItems.length,
@@ -181,7 +177,6 @@ class _OrderPlanScreenState extends State<OrderPlanScreen> {
               },
             ),
           ),
-          // Cart Preview
           const Divider(),
           const Text(
             'Order Preview:',
@@ -199,7 +194,6 @@ class _OrderPlanScreenState extends State<OrderPlanScreen> {
               },
             ),
           ),
-          // Save Order Button
           ElevatedButton(
             onPressed: _saveOrderPlan,
             child: const Text('Save Order Plan'),
