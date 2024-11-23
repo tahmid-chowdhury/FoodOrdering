@@ -12,6 +12,7 @@ class _OrderQueryScreenState extends State<OrderQueryScreen> {
   final DatabaseHelper dbHelper = DatabaseHelper.instance;
   DateTime? _selectedDate;
   Map<String, dynamic>? orderPlan;
+  final TextEditingController _itemsController = TextEditingController();
 
   void _pickDate() async {
     final DateTime? pickedDate = await showDatePicker(
@@ -37,10 +38,45 @@ class _OrderQueryScreenState extends State<OrderQueryScreen> {
     setState(() {
       if (result.isNotEmpty) {
         orderPlan = result.first;
+        _itemsController.text = orderPlan!['items'];
       } else {
         orderPlan = null;
       }
     });
+  }
+
+  void _updateOrderPlan() async {
+    if (orderPlan != null) {
+      final updatedItems = _itemsController.text;
+      final db = await dbHelper.database;
+      await db.update(
+        DatabaseHelper.orderTable,
+        {'items': updatedItems},
+        where: 'id = ?',
+        whereArgs: [orderPlan!['id']],
+      );
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Order plan updated successfully')),
+      );
+      _fetchOrderPlan();
+    }
+  }
+
+  void _deleteOrderPlan() async {
+    if (orderPlan != null) {
+      final db = await dbHelper.database;
+      await db.delete(
+        DatabaseHelper.orderTable,
+        where: 'id = ?',
+        whereArgs: [orderPlan!['id']],
+      );
+      setState(() {
+        orderPlan = null;
+      });
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Order plan deleted successfully')),
+      );
+    }
   }
 
   @override
@@ -67,15 +103,26 @@ class _OrderQueryScreenState extends State<OrderQueryScreen> {
             ),
           ),
           const Divider(),
-          // Display Order Plan
+          // Display Order Plan with Edit/Delete Options
           if (orderPlan != null) ...[
             Text(
               'Order Plan for ${_selectedDate!.toLocal().toString().split(' ')[0]}',
               style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 10),
-            Text('Items: ${orderPlan!['items']}'),
-            Text('Total Cost: \$${orderPlan!['totalCost']}'),
+            TextField(
+              controller: _itemsController,
+              decoration: const InputDecoration(labelText: 'Items'),
+            ),
+            ElevatedButton(
+              onPressed: _updateOrderPlan,
+              child: const Text('Update Order Plan'),
+            ),
+            ElevatedButton(
+              onPressed: _deleteOrderPlan,
+              style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+              child: const Text('Delete Order Plan'),
+            ),
           ] else if (_selectedDate != null) ...[
             const Text('No order plan found for the selected date.'),
           ],
