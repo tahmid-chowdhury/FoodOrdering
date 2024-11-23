@@ -150,7 +150,7 @@ class _OrderPlanScreenState extends State<OrderPlanScreen> {
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: Text(
-              'Remaining Budget: \$${targetCost != null ? (targetCost! - currentCost).toStringAsFixed(2) : 'N/A'}',
+              'Remaining Budget: \$${targetCost != null ? (targetCost! - currentCost).toStringAsFixed(2) : '0.00'}',
               style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
             ),
           ),
@@ -180,7 +180,7 @@ class _OrderPlanScreenState extends State<OrderPlanScreen> {
           // Cart Preview
           const Divider(),
           const Text(
-            'Cart Preview:',
+            'Order Preview:',
             style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
           ),
           Expanded(
