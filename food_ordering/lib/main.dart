@@ -2,8 +2,15 @@ import 'package:flutter/material.dart';
 import 'food_list_screen.dart';
 import 'order_plan_screen.dart';
 import 'order_query_screen.dart';
+import 'populate_database.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  // Populate the database
+  final PopulateDatabase populator = PopulateDatabase();
+  await populator.populateFoodItems();
+
   runApp(const FoodOrderingApp());
 }
 
