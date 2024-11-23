@@ -10,31 +10,37 @@ class OrderQueryScreen extends StatefulWidget {
 
 class _OrderQueryScreenState extends State<OrderQueryScreen> {
   final DatabaseHelper dbHelper = DatabaseHelper.instance;
-  final TextEditingController _dateController = TextEditingController();
+  DateTime? _selectedDate;
+  Map<String, dynamic>? orderPlan;
 
-  String? orderDetails;
-
-  void _queryOrderPlan() async {
-    final date = _dateController.text;
-    if (date.isNotEmpty) {
-      final result = await dbHelper.fetchOrderByDate(date);
-      if (result.isNotEmpty) {
-        final order = result.first;
-        setState(() {
-          orderDetails = 'Date: ${order['date']}\n'
-              'Items: ${order['items']}\n'
-              'Total Cost: \$${order['totalCost']}';
-        });
-      } else {
-        setState(() {
-          orderDetails = 'No order found for this date.';
-        });
-      }
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please enter a date')),
-      );
+  void _pickDate() async {
+    final DateTime? pickedDate = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(2000),
+      lastDate: DateTime(2100),
+    );
+    if (pickedDate != null) {
+      setState(() {
+        _selectedDate = pickedDate;
+      });
+      _fetchOrderPlan();
     }
+  }
+
+  void _fetchOrderPlan() async {
+    if (_selectedDate == null) return;
+
+    final dateString = _selectedDate!.toIso8601String().split('T')[0];
+    final result = await dbHelper.fetchOrderByDate(dateString);
+
+    setState(() {
+      if (result.isNotEmpty) {
+        orderPlan = result.first;
+      } else {
+        orderPlan = null;
+      }
+    });
   }
 
   @override
@@ -42,28 +48,37 @@ class _OrderQueryScreenState extends State<OrderQueryScreen> {
     return Scaffold(
       body: Column(
         children: [
+          // Date Picker
           Padding(
             padding: const EdgeInsets.all(8.0),
-            child: TextField(
-              controller: _dateController,
-              decoration: const InputDecoration(
-                labelText: 'Date (YYYY-MM-DD)',
-                border: OutlineInputBorder(),
-              ),
+            child: Row(
+              children: [
+                Text(
+                  _selectedDate != null
+                      ? 'Selected Date: ${_selectedDate!.toLocal().toString().split(' ')[0]}'
+                      : 'No Date Selected',
+                ),
+                const SizedBox(width: 10),
+                ElevatedButton(
+                  onPressed: _pickDate,
+                  child: const Text('Pick Date'),
+                ),
+              ],
             ),
           ),
-          ElevatedButton(
-            onPressed: _queryOrderPlan,
-            child: const Text('Query Order Plan'),
-          ),
-          if (orderDetails != null)
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Text(
-                orderDetails!,
-                style: const TextStyle(fontSize: 16),
-              ),
+          const Divider(),
+          // Display Order Plan
+          if (orderPlan != null) ...[
+            Text(
+              'Order Plan for ${_selectedDate!.toLocal().toString().split(' ')[0]}',
+              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
             ),
+            const SizedBox(height: 10),
+            Text('Items: ${orderPlan!['items']}'),
+            Text('Total Cost: \$${orderPlan!['totalCost']}'),
+          ] else if (_selectedDate != null) ...[
+            const Text('No order plan found for the selected date.'),
+          ],
         ],
       ),
     );
