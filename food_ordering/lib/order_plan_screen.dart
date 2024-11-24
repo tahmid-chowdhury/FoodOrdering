@@ -162,7 +162,7 @@ class _OrderPlanScreenState extends State<OrderPlanScreen> {
                 const SizedBox(width: 10),
                 ElevatedButton(
                   onPressed: _pickDate,
-                  child: const Text('Pick Date'),
+                  child: const Text('Pick'),
                   style: ElevatedButton.styleFrom(
                     textStyle: Theme.of(context).textTheme.bodyLarge,
                   ),

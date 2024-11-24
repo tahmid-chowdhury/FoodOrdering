@@ -133,14 +133,14 @@ class _OrderQueryScreenState extends State<OrderQueryScreen> {
               children: [
                 ElevatedButton(
                   onPressed: _updateOrderPlan,
-                  child: const Text('Update Order Plan'),
+                  child: const Text('Update Plan'),
                   style: ElevatedButton.styleFrom(
                     textStyle: Theme.of(context).textTheme.bodyLarge,
                   ),
                 ),
                 ElevatedButton(
                   onPressed: _deleteOrderPlan,
-                  child: const Text('Delete Order Plan'),
+                  child: const Text('Delete Plan'),
                   style: ElevatedButton.styleFrom(
                     textStyle: Theme.of(context).textTheme.bodyLarge,
                   ),
